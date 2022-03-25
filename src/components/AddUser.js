@@ -29,51 +29,66 @@ const AddUser=(props)=>{
 
     const error={
        name:'Your first or last name need to be less than 50 characters',
+        name_required:'You must enter a first and last name',
         age:'Your Age is must be between 1-110 years Old',
-        hobbies:'Your Hobbies must be at least 5 characters long'
+        age_min:'Your Min age must be 18',
+        age_required:'Please enter a valid age over 18',
+        hobby_min:'Your Hobbies must be at least 5 characters long',
+        hobby_max:'Your Hobbies cannot be longer than 250 characters',
+        hobby_required: 'Please include a hobby'
     }
     const fixStr=(str)=>{
-        let firstLetter = str.substring(0,1).toUpperCase() + str.substring(1).toLowerCase()
-        if(firstLetter.length > 50) {
-          setErrors([error.name])
-           //  window.alert(`Max length is 50 characters; will only save the first 50 characters + :${firstLetter}`)
-           //
-           //
-           // firstLetter = firstLetter.slice(49)
-           // return firstLetter.replace(/\s/g,"")
+            let firstLetter = str.substring(0,1).toUpperCase() + str.substring(1).toLowerCase()
+
+            if(!str){
+            setErrors((prev)=>[...prev,error.name_required])
         }
+
+       else if(firstLetter.length > 50) {
+
+          setErrors((prev)=>[...prev,error.name])
+
+        }
+
         return firstLetter.replace(/\s/g,"_")
     },
         fixAge=(age)=>{
         if(age>110) {
-            // window.alert(`Max age is 110 you put ${age} resetting to max age`)
-            // age = 110
             setErrors((prev)=>[...prev,error.age])
         }
+            if(!age){
+                setErrors((prev)=>[...prev,error.age_required])
+            }
+       else if(age<18 && age !==undefined){
+            setErrors((prev)=>[...prev,error.age_min])
+        }
+
         return age
+        },
+        fixHobbies=(hobby)=>{
+        if(hobby.length > 250){
+            setErrors((prev)=>[...prev,error.hobby_max])
+        }
+        if(!hobby){
+            setErrors((prev)=>[...prev,error.hobby_required])
+        }
+        else if(hobby.length<5){
+            setErrors((prev)=>[...prev,error.hobby_min])
+        }
+        return hobby
         };
 
 // console.log(errors.length)
     const addNewPerson = async() => {
 
-          if (hobbies.length < 5) {
-              window.alert('Hobbies must be at least 5 characters long')
-              hobbyRef.current.focus();
-              return;
-
-          }
-          if (hobbies.length > 4 ) {
-              console.log(firstName,lastName)
                   await setID(statePerson)
                   await setPerson({
                       id: id,
                       firstName: fixStr(firstName),
                       lastName: fixStr(lastName),
                       age: fixAge(age),
-                      hobbies: hobbies
+                      hobbies: fixHobbies(hobbies)
                   })
-              }
-
     }
 
 
@@ -135,26 +150,22 @@ if(errors.length > 0){
 
     const handleSubmit = async(e) => {
         e.preventDefault();
-        if (hobbies.length < 5) {
-            window.alert('Hobbies must be at least 5 characters long')
-            hobbyRef.current.focus();
-            return;
 
-        }
-        if (hobbies.length > 4 ) {
-            await setIsMounted(true)
-            console.log(firstName,lastName)
-            await addNewPerson()
+if(errors.length===0) {
 
+    await setIsMounted(true)
+    console.log(firstName, lastName)
+    await addNewPerson()
 
+    //addPerson(person)
 
-                //addPerson(person)
-
-                setFirstName('')
-                setLastName('')
-                setAge('')
-                setHobbies('')
-            }
+    setFirstName('')
+    setLastName('')
+    setAge('')
+    setHobbies('')
+}else{
+    firstNameRef.current.focus()
+}
 
 
     }
@@ -180,7 +191,6 @@ if(errors.length > 0){
                 name={firstName}
                 placeholder="First Name"
                 onChange={handleFirstNameChange}
-                required
                 value={firstName}
                 ref={firstNameRef}
 
@@ -190,7 +200,6 @@ if(errors.length > 0){
                 name={lastName}
                 placeholder="last Name"
                 onChange={handleLastNameChange}
-                required
                 value={lastName}
             />
             <input
@@ -198,7 +207,6 @@ if(errors.length > 0){
                 name={age}
                 placeholder="age"
                 onChange={handleAgeChange}
-                required
                 value={age}
             />
             <input
@@ -206,7 +214,6 @@ if(errors.length > 0){
                 name={hobbies}
                 placeholder="Hobbies"
                 onChange={handleHobbiesChange}
-                required
                 value={hobbies}
                 ref={hobbyRef}
             />
