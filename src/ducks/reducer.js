@@ -54,25 +54,7 @@ const updatePersonFunction=(person,state)=>{
   newState.person[checkID] = clone
     return newState
 }
-const replaceItemsById =async(state,newArray)=>{
-    let newArray33= await JSON.parse(JSON.stringify(newArray))
-    let originalArray = await JSON.parse(JSON.stringify(state.person))
-    // const id = newArray33.id
 
-    if(originalArray.length===0){
-      addPerson(newArray33)
-    }
-    const newItems= originalArray.findIndex(p=>p.id===newArray33.id)
-    console.log(newItems)
-
-    let rest = await originalArray.slice(0,newItems)
-    rest.push(newArray)
-
-    console.log(rest,'rest')
-    //console.log(newObject)
-    return rest
-
-}
 const filtered = (id,arr)=>{
     let clone = JSON.parse(JSON.stringify(arr))
     let newArray;
@@ -98,7 +80,6 @@ const filtered = (id,arr)=>{
                 }
             case 'DELETE_PERSON':
                 let filteredList = filtered(action.payload,state.person)
-                console.log(filteredList)
                 return {
                     ...state,
                     person:[...filteredList]

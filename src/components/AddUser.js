@@ -123,6 +123,19 @@ if(errors.length > 0){
 
     },[person,errors])
 
+    const reset=(e)=>{
+        e.preventDefault()
+        if(firstName.length ===0 && lastName.length === 0 && age.length === 0 && hobbies.length === 0){
+            window.alert(`Cannot clear an empty field`)
+        }else{
+            setFirstName('')
+            setLastName('')
+            setAge('')
+            setHobbies('')
+
+        }
+        firstNameRef.current.focus()
+    }
 
 
     const handleFirstNameChange=(e)=>{
@@ -224,8 +237,10 @@ if(errors.length===0) {
                 ref={hobbyRef}
             />
     </div>
-
+            <div>
+            <button onClick={reset}>Reset</button>
             <button >Submit Form</button>
+            </div>
         </form>
             <Link to='/viewContainer'  >
             <button>See List</button>

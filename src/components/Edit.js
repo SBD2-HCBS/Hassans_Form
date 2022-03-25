@@ -14,8 +14,7 @@ const Edit=()=>{
     const dispatch = useDispatch();
     const hobbyRef=React.useRef(),
         firstNameRef = React.useRef();
-  // console.log(from.people,'edit')
-  //   console.log(from.current)
+
     const [firstName,setFirstName] = useState(''),
 
         [lastName,setLastName] = useState(''),
@@ -106,8 +105,6 @@ const Edit=()=>{
         await setID(from.current.id)
             setErrors([]);
             setShowErrorMessage(false)
-            console.log(firstName)
-        console.log(id)
 
         },
         handleLastNameChange=(e)=>{
@@ -150,16 +147,17 @@ const Edit=()=>{
 
 
     }
-    useEffect(()=>{
+    useEffect( ()=>{
         firstNameRef.current.focus()
     },[])
-    useEffect(()=>{
+    useEffect(async()=>{
         if(isMounted) {
             console.log(person,'person')
         if(errors.length > 0) {
             console.log(errors)
-            setShowErrorMessage(true)
-            firstNameRef.current.focus()
+
+           await setShowErrorMessage(true)
+
         }else{
             setSubmit(true)
          dispatch(updatePersonFunction(person))
@@ -177,6 +175,20 @@ const Edit=()=>{
 
     },[person])
 
+    const reset=(e)=>{
+        e.preventDefault()
+        if(firstName.length ===0 && lastName.length === 0 && age.length === 0 && hobbies.length === 0){
+            window.alert(`Cannot clear an empty field`)
+        }else{
+            setFirstName('')
+            setLastName('')
+            setAge('')
+            setHobbies('')
+
+        }
+        firstNameRef.current.focus()
+    }
+
     return(
         <div className="App-header outSide">
             {showErrorMessage ?(
@@ -186,12 +198,14 @@ const Edit=()=>{
                         <li key={index}>{error}</li>
                     ))}
                 </div>
-            ):null}
-            <form onSubmit={handleSubmit}>
-                <span id='spans'><h2>Update Your Form</h2></span>
+            ):<div>
                 <span><h2>Full Name: {!firstName?from.current.firstName:firstName} {!lastName?from.current.lastName:lastName}</h2></span>
                 <h2>Age: {!age?from.current.age:age}</h2>
                 <h3>Hobbies: {!hobbies?from.current.hobbies:hobbies}</h3>
+            </div>}
+            <form onSubmit={handleSubmit}>
+                <span id='spans'><h2>Update Your Form</h2></span>
+
                 <div id='form' >
                         <input
                             type='text'
@@ -228,8 +242,10 @@ const Edit=()=>{
                             ref={hobbyRef}
                         />
                     </div>
-
+                <div>
+                    <button onClick={reset}>Reset</button>
                 <button >Submit Form</button>
+                </div>
             <Link to='/viewContainer'  >
                 <button>See List</button>
             </Link>
