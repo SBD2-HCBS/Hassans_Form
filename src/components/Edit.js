@@ -31,7 +31,8 @@ const Edit=()=>{
         [isMounted,setIsMounted] = useState(false),
         [originalArray, setOriginalArray]=useState(from.current),
         [errors,setErrors] = useState([]),
-        [showErrorMessage,setShowErrorMessage] = useState(false)
+        [showErrorMessage,setShowErrorMessage] = useState(false),
+        [classChoice,setClassChoice] = useState('reset1')
 
     const error={
         name:'Your first or last name need to be less than 50 characters',
@@ -156,7 +157,7 @@ const Edit=()=>{
         if(errors.length > 0) {
             // console.log(errors)
            await setShowErrorMessage(true)
-
+            setClassChoice('reset2')
         }else{
             setSubmit(true)
          dispatch(updatePersonFunction(person))
@@ -165,6 +166,7 @@ const Edit=()=>{
 
         return async()=> {
             await setIsMounted(false)
+            setClassChoice('reset1')
             setTimeout(() => {
                 setSubmit(false)
             }, 1500)
@@ -242,7 +244,7 @@ const Edit=()=>{
                         />
                     </div>
                 <div>
-                    <button onClick={reset}>Reset</button>
+                    <button className={classChoice} onClick={reset}>Reset</button>
                 <button >Submit Form</button>
                 </div>
             <Link to='/viewContainer'  >

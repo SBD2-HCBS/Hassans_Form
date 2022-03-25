@@ -85,3 +85,17 @@ input{
      justify-content: center;
      text-align: center;
  }
+
+ .reset1{
+     background-color:#69c;
+ }
+ .reset1:hover{
+     background-color:#e4e442;
+     font-weight:bold;
+     font-size:large;
+ }
+
+ .reset2{
+     background-color:#660b0b
+
+ }

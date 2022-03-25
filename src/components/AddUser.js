@@ -5,6 +5,7 @@ import {addPerson} from'../ducks/reducer'
 import '../App.css';
 import {Link} from "react-router-dom";
 
+
 const AddUser=(props)=>{
     const statePerson = useSelector(state=>state.person.id);
     const [submit,setSubmit] = useState(false)
@@ -25,7 +26,8 @@ const AddUser=(props)=>{
         }),
         [isMounted,setIsMounted] = useState(false),
         [errors,setErrors] = useState([]),
-        [showErrorMessage,setShowErrorMessage] = useState(false)
+        [showErrorMessage,setShowErrorMessage] = useState(false),
+        [classChoice,setClassChoice] = useState('reset1')
 
     const error={
        name:'Your first or last name need to be less than 50 characters',
@@ -101,11 +103,11 @@ useEffect(()=>{
 
 if(isMounted) {
 if(errors.length > 0){
-    console.log(errors)
+
     setShowErrorMessage(true)
     firstNameRef.current.focus()
+    setClassChoice('reset2')
     return()=>{
-
     }
 
 }else {
@@ -113,6 +115,7 @@ if(errors.length > 0){
     dispatch(addPersonFunction(person))
     return async()=> {
         await setIsMounted(false)
+        setClassChoice('reset1')
         setTimeout(() => {
             setSubmit(false)
         }, 1500)
@@ -145,7 +148,6 @@ if(errors.length > 0){
         setShowErrorMessage(false)
         setFirstName(e.target.value)
 
-
     },
         handleLastNameChange=(e)=>{
         e.preventDefault();
@@ -169,13 +171,9 @@ if(errors.length > 0){
 
     const handleSubmit = async(e) => {
         e.preventDefault();
-
 if(errors.length===0) {
-
     await setIsMounted(true)
     await addNewPerson()
-
-    //addPerson(person)
 
     setFirstName('')
     setLastName('')
@@ -188,10 +186,8 @@ if(errors.length===0) {
 
     }
 
-
     return(
         <div className="App-header outSide" >
-
             {showErrorMessage ?(
                 <div>
                     <h3>Errors</h3>
@@ -237,7 +233,7 @@ if(errors.length===0) {
             />
     </div>
             <div>
-            <button onClick={reset}>Reset</button>
+            <button className={classChoice} onClick={reset}>Reset</button>
             <button >Submit Form</button>
             </div>
         </form>
