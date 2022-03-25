@@ -132,7 +132,7 @@ const Edit=()=>{
         if(errors.length===0) {
 
             await setIsMounted(true)
-            console.log(firstName, lastName)
+            // console.log(firstName, lastName)
             await addNewPerson()
 
             //addPerson(person)
@@ -152,10 +152,9 @@ const Edit=()=>{
     },[])
     useEffect(async()=>{
         if(isMounted) {
-            console.log(person,'person')
+            // console.log(person,'person')
         if(errors.length > 0) {
-            console.log(errors)
-
+            // console.log(errors)
            await setShowErrorMessage(true)
 
         }else{

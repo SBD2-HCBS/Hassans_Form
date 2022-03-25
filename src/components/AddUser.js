@@ -173,7 +173,6 @@ if(errors.length > 0){
 if(errors.length===0) {
 
     await setIsMounted(true)
-    console.log(firstName, lastName)
     await addNewPerson()
 
     //addPerson(person)
