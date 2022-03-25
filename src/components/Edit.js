@@ -45,9 +45,9 @@ const Edit=()=>{
         hobby_required: 'Please include a hobby'
     }
     const fixStr=(str)=>{
-            let firstLetter = str.substring(0,1).toUpperCase() + str.substring(1).toLowerCase()
+            let firstLetter =str !==undefined?str.substring(0,1).toUpperCase() + str.substring(1).toLowerCase():''
 
-            if(!str){
+            if(str===''){
                 setErrors((prev)=>[...prev,error.name_required])
             }
 
@@ -86,7 +86,6 @@ const Edit=()=>{
         };
 
 
-
     const addNewPerson = async() => {
 
             await setPerson({
@@ -99,7 +98,7 @@ const Edit=()=>{
 
         }
 
-//console.log(person)
+
     const handleFirstNameChange=async(e)=>{
             e.preventDefault();
             // const {firstName, lastName, age, hobbies} = e.target;
@@ -157,22 +156,37 @@ const Edit=()=>{
     useEffect(()=>{
         if(isMounted) {
             console.log(person,'person')
-
+        if(errors.length > 0) {
+            console.log(errors)
+            setShowErrorMessage(true)
+            firstNameRef.current.focus()
+        }else{
+            setSubmit(true)
          dispatch(updatePersonFunction(person))
             setErrors([]);
             setShowErrorMessage(false)
-        }
+
         return async()=> {
             await setIsMounted(false)
             setTimeout(() => {
                 setSubmit(false)
             }, 1500)
         }
+        }
+        }
 
     },[person])
 
     return(
         <div className="App-header outSide">
+            {showErrorMessage ?(
+                <div>
+                    <h3>Errors</h3>
+                    {errors.map((error, index) => (
+                        <li key={index}>{error}</li>
+                    ))}
+                </div>
+            ):null}
             <form onSubmit={handleSubmit}>
                 <span id='spans'><h2>Update Your Form</h2></span>
                 <span><h2>Full Name: {!firstName?from.current.firstName:firstName} {!lastName?from.current.lastName:lastName}</h2></span>
