@@ -30,123 +30,127 @@ const Edit=()=>{
             hobbies
         }),
         [isMounted,setIsMounted] = useState(false),
-        [originalArray, setOriginalArray]=useState(from.current)
+        [originalArray, setOriginalArray]=useState(from.current),
+        [errors,setErrors] = useState([]),
+        [showErrorMessage,setShowErrorMessage] = useState(false)
 
+    const error={
+        name:'Your first or last name need to be less than 50 characters',
+        name_required:'You must enter a first and last name',
+        age:'Your Age is must be between 1-110 years Old',
+        age_min:'Your Min age must be 18',
+        age_required:'Please enter a valid age over 18',
+        hobby_min:'Your Hobbies must be at least 5 characters long',
+        hobby_max:'Your Hobbies cannot be longer than 250 characters',
+        hobby_required: 'Please include a hobby'
+    }
     const fixStr=(str)=>{
             let firstLetter = str.substring(0,1).toUpperCase() + str.substring(1).toLowerCase()
-            if(firstLetter.length > 50) {
-                window.alert(`Max length is 50 characters; will only save the first 50 characters + :${firstLetter}`)
 
-                firstLetter = firstLetter.slice(49)
-                // return firstLetter.replace(/\s/g,"")
+            if(!str){
+                setErrors((prev)=>[...prev,error.name_required])
             }
+
+            else if(firstLetter.length > 50) {
+
+                setErrors((prev)=>[...prev,error.name])
+
+            }
+
             return firstLetter.replace(/\s/g,"_")
         },
         fixAge=(age)=>{
             if(age>110) {
-                window.alert(`Max age is 110 you put ${age} resetting to max age`)
-                age = 110
+                setErrors((prev)=>[...prev,error.age])
             }
+            if(!age){
+                setErrors((prev)=>[...prev,error.age_required])
+            }
+            else if(age<18 && age !==undefined){
+                setErrors((prev)=>[...prev,error.age_min])
+            }
+
             return age
         },
-        fixHobbies=(str)=>{
+        fixHobbies=(hobby)=>{
+            if(hobby.length > 250){
+                setErrors((prev)=>[...prev,error.hobby_max])
+            }
+            if(!hobby){
+                setErrors((prev)=>[...prev,error.hobby_required])
+            }
+            else if(hobby.length<5){
+                setErrors((prev)=>[...prev,error.hobby_min])
+            }
+            return hobby
+        };
 
-        }
 
-    // const replaceById =(id,arr,person)=>{
-    //     let newArray = arr
-    //     const index=newArray.findIndex(p=>p.id===id)
-    //     console.log(index)
-    //     newArray[index].name ='juju'
-    //     console.log(newArray)
-    //     return newArray
-    // }
 
-   function replaceArrayById(originalArray,newArray){
-
-   let rest;
-
-       //  let newArray33=[originalArray].slice();
-       // console.log(newArray33)
-       //  const id =   [newArray].find(o=>o.id)
-       //  // console.log(id)
-       //  const newItems= [newArray33].findIndex(p=>p.id===id)
-       //  // console.log(newItems)
-       //  let rest = [newArray33].slice(0,newItems)
-       //  rest.push(newArray)
-        // console.log(newArray33)
-        //console.log(newObject)
-
-        return rest
-    }
-    let finalArray;
-    let newPerson;
     const addNewPerson = async() => {
-        if (hobbies.length<5){
-            window.alert('Hobbies must be at least 5 characters long')
-            hobbyRef.current.focus();
-            return;
-
-        }if(hobbies.length>4) {
 
             await setPerson({
                 id: id,
                 firstName: fixStr(firstName),
                 lastName: fixStr(lastName),
                 age: fixAge(age),
-                hobbies: hobbies
+                hobbies: fixHobbies(hobbies)
             })
-         //   finalArray=await replaceItemsById(from.people, person)
 
-            // finalArray= replaceArrayById(originalArray,person)
-            // console.log(finalArray)
         }
-    }
+
 //console.log(person)
     const handleFirstNameChange=async(e)=>{
             e.preventDefault();
             // const {firstName, lastName, age, hobbies} = e.target;
            await setFirstName(e.target.value)
         await setID(from.current.id)
+            setErrors([]);
+            setShowErrorMessage(false)
             console.log(firstName)
         console.log(id)
 
         },
         handleLastNameChange=(e)=>{
             e.preventDefault();
+            setErrors([]);
+            setShowErrorMessage(false)
             setLastName(e.target.value)
         },
         handleAgeChange=(e)=>{
             e.preventDefault();
+            setErrors([]);
+            setShowErrorMessage(false)
             setAge(e.target.value)
         },
         handleHobbiesChange=(e)=>{
             e.preventDefault();
+            setErrors([]);
+            setShowErrorMessage(false)
             setHobbies(e.target.value)
         };
 
     const handleSubmit = async(e) => {
         e.preventDefault();
-        if (hobbies.length < 5) {
-            window.alert('Hobbies must be at least 5 characters long')
-            hobbyRef.current.focus();
-            return;
 
-        }
-        if (hobbies.length > 4) {
+        if(errors.length===0) {
+
             await setIsMounted(true)
-
+            console.log(firstName, lastName)
             await addNewPerson()
-            setSubmit(true);
-            // addPerson(person)
+
+            //addPerson(person)
 
             setFirstName('')
             setLastName('')
             setAge('')
             setHobbies('')
-
+        }else{
+            firstNameRef.current.focus()
         }
-    };
+
+
+    }
     useEffect(()=>{
         firstNameRef.current.focus()
     },[])
@@ -155,7 +159,8 @@ const Edit=()=>{
             console.log(person,'person')
 
          dispatch(updatePersonFunction(person))
-
+            setErrors([]);
+            setShowErrorMessage(false)
         }
         return async()=> {
             await setIsMounted(false)
@@ -179,7 +184,7 @@ const Edit=()=>{
                             name={firstName}
                             placeholder="First Name"
                             onChange={handleFirstNameChange}
-                            required
+
                             value={firstName}
                             ref={firstNameRef}
                         />
@@ -188,7 +193,7 @@ const Edit=()=>{
                             name={lastName}
                             placeholder="last Name"
                             onChange={handleLastNameChange}
-                            required
+
                             value={lastName}
                         />
                         <input
@@ -196,7 +201,7 @@ const Edit=()=>{
                             name={age}
                             placeholder="age"
                             onChange={handleAgeChange}
-                            required
+
                             value={age}
                         />
                         <input
@@ -204,7 +209,7 @@ const Edit=()=>{
                             name={hobbies}
                             placeholder="Hobbies"
                             onChange={handleHobbiesChange}
-                            required
+
                             value={hobbies}
                             ref={hobbyRef}
                         />

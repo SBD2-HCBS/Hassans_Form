@@ -136,14 +136,20 @@ if(errors.length > 0){
     },
         handleLastNameChange=(e)=>{
         e.preventDefault();
+            setErrors([]);
+            setShowErrorMessage(false)
         setLastName(e.target.value)
         },
         handleAgeChange=(e)=>{
         e.preventDefault();
+            setErrors([]);
+            setShowErrorMessage(false)
         setAge(e.target.value)
     },
         handleHobbiesChange=(e)=>{
         e.preventDefault();
+            setErrors([]);
+            setShowErrorMessage(false)
         setHobbies(e.target.value)
         }
 
