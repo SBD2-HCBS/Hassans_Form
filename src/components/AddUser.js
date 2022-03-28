@@ -187,7 +187,7 @@ if(errors.length===0) {
     }
 
     return(
-        <div className="App-header outSide" >
+        <div className="App-header outSide" >,,
             {showErrorMessage ?(
                 <div>
                     <h3>Errors</h3>
